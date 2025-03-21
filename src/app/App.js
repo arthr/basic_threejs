@@ -6,6 +6,7 @@ import { LightSetup } from "../lights/LightSetup.js";
 import { CharacterModel } from "../models/CharacterModel.js";
 import { AnimationController } from "../animation/AnimationController.js";
 import { GuiController } from "../ui/GuiController.js";
+import { CharacterController } from "../controllers/CharacterController.js";
 
 export class App {
 	constructor() {
@@ -44,6 +45,12 @@ export class App {
 		this.animationController = new AnimationController(model);
 		this.animationController.setupAnimations(animations);
 
+		// Adicionar o controlador de personagem
+		this.characterController = new CharacterController(
+			model,
+			this.animationController
+		);
+
 		const face = this.characterModel.getFace();
 		this.guiController = new GuiController(
 			this.container,
@@ -64,6 +71,11 @@ export class App {
 
 		if (this.animationController) {
 			this.animationController.update(deltaTime);
+		}
+
+		// Atualizar o controlador de personagem
+		if (this.characterController) {
+			this.characterController.update(deltaTime);
 		}
 
 		this.renderer.render(this.scene.get(), this.camera.get());
