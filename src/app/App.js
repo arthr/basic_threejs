@@ -58,6 +58,10 @@ export class App {
 			face,
 			this.camera
 		);
+
+		// Definir o personagem como alvo da câmera
+		this.guiController.setCharacterTarget(model);
+
 		this.guiController.setup();
 	}
 
@@ -76,6 +80,11 @@ export class App {
 		// Atualizar o controlador de personagem
 		if (this.characterController) {
 			this.characterController.update(deltaTime);
+		}
+
+		// Atualizar a câmera
+		if (this.camera) {
+			this.camera.update(deltaTime);
 		}
 
 		this.renderer.render(this.scene.get(), this.camera.get());

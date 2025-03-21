@@ -10,7 +10,13 @@ export class GuiController {
 		this.api = {
 			state: "Walking",
 			cameraControls: false,
+			followCamera: false,
 		};
+		this.target = null;
+	}
+
+	setCharacterTarget(target) {
+		this.target = target;
 	}
 
 	setup() {
@@ -69,7 +75,34 @@ export class GuiController {
 					if (!this.camera.controls)
 						this.camera.initControls(this.container);
 					this.camera.enableControls(value);
+
+					if (value && this.api.followCamera) {
+						// Atualiza o modo de seguimento para usar o novo estado dos controles
+						this.camera.enableFollowMode(true, this.target);
+					}
 				});
+
+			cameraFolder
+				.add(this.api, "followCamera")
+				.name("Follow Camera")
+				.onChange((value) => {
+					// Se os controles estiverem habilitados, continuam habilitados
+					if (this.api.cameraControls && !this.camera.controls) {
+						this.camera.initControls(this.container);
+					}
+
+					this.camera.enableFollowMode(value, this.target);
+				});
+
+			// Adicionar controle para o tempo de auto reset da câmera
+			if ("autoResetTime" in this.camera) {
+				cameraFolder
+					.add(this.camera, "autoResetTime", 1, 10)
+					.name("Auto Reset (s)")
+					.onChange((value) => {
+						this.camera.autoResetTime = value;
+					});
+			}
 
 			cameraFolder
 				.add(
@@ -77,6 +110,12 @@ export class GuiController {
 					"resetCamera"
 				)
 				.name("Reset Camera");
+
+			// Descrição do modo híbrido
+			cameraFolder
+				.add({ info: "" }, "info")
+				.name("Modo Híbrido: Controles + Seguimento")
+				.disable();
 
 			cameraFolder.open();
 		}
