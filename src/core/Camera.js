@@ -33,7 +33,7 @@ export class Camera {
 	initControls(domElement) {
 		this.domElement = domElement;
 		this.controls = new OrbitControls(this.camera, domElement);
-		this.controls.enablePan = true;
+		this.controls.enablePan = false;
 		this.controls.minPolarAngle = THREE.MathUtils.degToRad(25);
 		this.controls.maxPolarAngle = THREE.MathUtils.degToRad(85);
 		this.controls.minDistance = 10;
